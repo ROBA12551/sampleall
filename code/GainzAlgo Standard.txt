@@ -1,0 +1,22 @@
+// © GainzAlgo
+
+//@version=5
+indicator('GainzAlgo Standard', overlay=true, max_labels_count=500)
+
+stable_candle = math.abs(close - open) / ta.tr > .5
+rsi = ta.rsi(close, 14)
+
+bullish_engulfing = close[1] < open[1] and close > open and close > open[1]
+rsi_below_50 = rsi < 50
+decrease_over_5 = close < close[5]
+
+bull = bullish_engulfing and stable_candle and rsi_below_50 and decrease_over_5
+
+bearish_engulfing = close[1] > open[1] and close < open and close < open[1]
+rsi_above_50 = rsi > 50
+increase_over_5 = close > close[5]
+
+bear = bearish_engulfing and stable_candle and rsi_above_50 and increase_over_5
+
+label.new(bull ? bar_index : na, low, 'BUY', color=color.rgb(0, 255, 8), style=label.style_label_up, textcolor=color.white, size=size.large)
+label.new(bear ? bar_index : na, high, 'SELL', color=color.rgb(255, 0, 0), style=label.style_label_down, textcolor=color.white, size=size.large)
